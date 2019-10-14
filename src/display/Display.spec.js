@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { render, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'
 
 import Display from './Display'
 import { getByText } from '@testing-library/dom';
@@ -19,6 +20,26 @@ test('Displays open or closed', () => {
     const lockedMock = jest.fn();
     const { getByText } = render(<Display closed={closedMock} locked={lockedMock} />)
 
-    lockedMock ? getByText(/locked/i) : getByText(/unlocked/i);
-    closedMock ? getByText(/closed/i) : getByText(/open/i);
+    expect(closedMock).toBeTruthy()
+    expect(!closedMock).toBeFalsy()
+
+    expect(lockedMock).toBeTruthy()
+    expect(!lockedMock).toBeFalsy()
+
+})
+
+test('Displays red or Green LED', () => {
+    const closedMock = jest.fn();
+    const lockedMock = jest.fn();
+    const { queryByText } = render(<Display closed={closedMock} locked={lockedMock} />)
+
+    const closed = queryByText(/closed/i)
+    expect(closed).toBeInTheDocument()
+    expect(closed).toHaveClass('red-led')
+
+    const unlock = queryByText(/locked/i)
+    expect(unlock).toBeInTheDocument()
+    expect(unlock).toHaveClass('red-led')
+
+
 })
